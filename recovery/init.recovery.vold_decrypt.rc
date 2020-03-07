@@ -1,0 +1,128 @@
+on init
+  start hwservicemanager
+  start servicemanager
+  start prepdecrypt
+  start preptouch
+
+on fs
+  chmod 0660 /dev/qseecom
+  chown system drmrpc /dev/qseecom
+  chmod 0664 /dev/ion
+  chown system system /dev/ion
+  install_keyring
+
+# Wait for hwservicemanager being started, TWRP being ready for decryption and the prepdecrypt finished
+on property:hwservicemanager.ready=true && property:ro.crypto.state=encrypted && property:crypto.ready=1
+  start qseecomd
+
+# Wait for qseecomd being started
+on property:vendor.sys.listeners.registered=true
+  start gatekeeper-1-0
+  start gatekeeper-1-0-qti
+
+# Wait for qseecomd being started and only execute if Keymaster v3 is needed
+on property:vendor.sys.listeners.registered=true && property:ro.vendor.keymaster.version=v3
+  start keymaster-3.0
+  start keymaster-3.0-qti
+
+# Wait for qseecomd being started and only execute if Keymaster v4 is needed
+on property:vendor.sys.listeners.registered=true && property:ro.vendor.keymaster.version=v4
+  start keymaster-4.0
+
+# Stop everything after the decryption was successfull
+on property:twrp.mount_to_decrypt=0
+  stop keymaster-4.0
+  stop keymaster-3.0
+  stop keymaster-3.0-qti
+  stop gatekeeper-1-0
+  stop gatekeeper-1-0-qti
+  stop qseecomd
+  stop servicemanager
+  stop hwservicemanager
+
+service prepdecrypt /sbin/prepdecrypt.sh
+  disabled
+  user root
+  group root
+  oneshot
+  seclabel u:r:recovery:s0
+
+# Fixes stock TWRP touch.
+# File exists only in stock TWRP, but won't provoke an error in SODP TWRP
+service preptouch /sbin/preptouch.sh
+  disabled
+  user root
+  group root
+  oneshot
+  seclabel u:r:recovery:s0
+
+service qseecomd /sbin/qseecomd
+  disabled
+  user root
+  group root
+  seclabel u:r:recovery:s0
+
+# SODP uses the AOSP open source implementation
+# File exists only in SODP TWRP, but won't provoke an error in stock TWRP
+service gatekeeper-1-0 /sbin/android.hardware.gatekeeper@1.0-service
+  user root
+  group root
+  disabled
+  seclabel u:r:recovery:s0
+
+# Stock uses the closed source qualcomm implementation
+# File exists only in stock TWRP, but won't provoke an error in SODP TWRP
+service gatekeeper-1-0-qti /sbin/android.hardware.gatekeeper@1.0-service-qti
+  user root
+  group root
+  disabled
+  seclabel u:r:recovery:s0
+
+service hwservicemanager /sbin/hwservicemanager
+  user root
+  group root
+  disabled
+  onrestart setprop hwservicemanager.ready false
+  seclabel u:r:recovery:s0
+
+service servicemanager /sbin/servicemanager
+  user root
+  group root readproc
+  disabled
+  seclabel u:r:recovery:s0
+
+# SODP uses the AOSP open source implementation
+# File exists only in SODP TWRP, but won't provoke an error in stock TWRP
+service keymaster-3.0 /sbin/android.hardware.keymaster@3.0-service
+  user root
+  group root
+  disabled
+  seclabel u:r:recovery:s0
+
+# Stock uses the closed source qualcomm implementation
+# File exists only in stock TWRP, but won't provoke an error in SODP TWRP
+service keymaster-3.0-qti /sbin/android.hardware.keymaster@3.0-service-qti
+  user root
+  group root
+  disabled
+  seclabel u:r:recovery:s0
+
+service keymaster-4.0 /sbin/android.hardware.keymaster@4.0-service-qti
+  user root
+  group root
+  disabled
+  seclabel u:r:recovery:s0
+
+service keystore_auth /sbin/keystore_auth
+  oneshot
+  user system
+  group root
+  disabled
+  seclabel u:r:recovery:s0
+
+# keystore is started and stopped on demand by TWRP
+service keystore /sbin/keystore /tmp/misc/keystore
+  user root
+  group root drmrpc readproc
+  disabled
+  seclabel u:r:recovery:s0

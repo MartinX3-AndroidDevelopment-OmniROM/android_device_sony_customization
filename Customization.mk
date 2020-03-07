@@ -1,0 +1,6 @@
+# Kernel inline building
+BOARD_KERNEL_SEPARATED_DTBO := true
+TARGET_COMPILE_WITH_MSM_KERNEL := true
+TARGET_KERNEL_SOURCE := kernel/sony/msm-4.14/kernel
+TARGET_NEEDS_DTBOIMAGE := false
+TARGET_PROVIDES_DTBOIMAGE := false
