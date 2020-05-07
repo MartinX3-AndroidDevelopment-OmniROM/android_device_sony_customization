@@ -63,14 +63,8 @@ TW_OVERRIDE_SYSTEM_PROPS := "ro.build.version.release;ro.build.version.security_
 # So the TWRP needs a new release each month or AvB 2.0 will refuse the TWRP to boot.
 # A workaround would be a disabled decryption.
 PLATFORM_VERSION := 10.0.0
-ifeq ($(TW_IS_FOR_STOCK),)
-$(warning TW_IS_FOR_STOCK is not set, set it to 'true' or 'false' or the security patch level might be wrong)
-endif
-ifeq ($(TW_IS_FOR_STOCK), true)
-	# Stock is one month behind
-	PLATFORM_SECURITY_PATCH_OVERRIDE := 2020-03-05
-else
-	PLATFORM_SECURITY_PATCH_OVERRIDE := 2020-04-05
+ifneq ($(PLATFORM_SECURITY_PATCH_OVERRIDE), )
+	PLATFORM_SECURITY_PATCH_OVERRIDE := $(PLATFORM_SECURITY_PATCH_OVERRIDE)
 endif
 
 # init
