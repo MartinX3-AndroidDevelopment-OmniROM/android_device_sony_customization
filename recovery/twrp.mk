@@ -68,13 +68,47 @@ ifneq ($(PLATFORM_SECURITY_PATCH_OVERRIDE), )
 endif
 
 # init
-PRODUCT_PACKAGES += \
-    twrp.fstab \
-    prepdecrypt.sh \
+TARGET_RECOVERY_DEVICE_MODULES += \
     init.recovery.vold_decrypt.rc \
     init.recovery.usb.rc \
+		twrp.fstab \
     manifest.xml \
+		qseecomd \
+		android.hardware.gatekeeper@1.0-service \
+		android.hardware.gatekeeper@1.0-impl-qti.so \
 		libgptutils.so \
 		libicuuc.so \
 		libandroidicu.so \
-		libicui18n.so
+		libicui18n.so \
+		libQSEEComAPI.so \
+		libdrmfs.so \
+		libdiag.so \
+		librpmb.so \
+		libssd.so \
+		libdrmtime.so \
+		libtime_genoff.so \
+    libkeymasterdeviceutils.so \
+		libspcom.so \
+		libion.so \
+		libxml2.so \
+		bootctrl.sdm845.so
+TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
+		$(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/qseecomd \
+		$(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+
+ifneq ($(TARGET_KEYMASTER_V4),true)
+TARGET_RECOVERY_DEVICE_MODULES += \
+		android.hardware.keymaster@3.0-service \
+		android.hardware.keymaster@3.0-impl-qti.so
+TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
+		$(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.keymaster@3.0-service
+endif
+
+ifeq ($(TARGET_KEYMASTER_V4),true)
+TARGET_RECOVERY_DEVICE_MODULES += \
+		android.hardware.keymaster@4.0-service-qti \
+		libqtikeymaster4.so \
+		libkeymasterutils.so
+TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
+		$(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.keymaster@4.0-service-qti
+endif
