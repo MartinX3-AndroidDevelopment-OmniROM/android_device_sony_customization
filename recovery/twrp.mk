@@ -112,3 +112,38 @@ TARGET_RECOVERY_DEVICE_MODULES += \
 TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
 		$(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw/android.hardware.keymaster@4.0-service-qti
 endif
+
+# The stock kernel modules to enable touch support
+ifeq ($(TARGET_STOCK),true)
+TARGET_RECOVERY_DEVICE_MODULES += \
+		preptouch.sh
+
+#XZ2 XZ2C Clearpad & TCM
+ifneq ($(filter omni_akari omni_apollo, $(TARGET_PRODUCT)),)
+TARGET_RECOVERY_DEVICE_MODULES += \
+		clearpad_rmi_dev.ko \
+		clearpad_core.ko \
+		clearpad_i2c.ko \
+		synaptics_tcm_i2c.ko \
+		synaptics_tcm_core.ko \
+		synaptics_tcm_touch.ko \
+		synaptics_tcm_device.ko \
+		synaptics_tcm_testing.ko \
+		synaptics_tcm_reflash.ko \
+		synaptics_tcm_recovery.ko \
+		synaptics_tcm_diagnostics.ko
+endif
+
+#XZ2P SSW
+ifneq ($(filter omni_akari, $(TARGET_PRODUCT)),) # Because the Aurora is build as akari (no customROM support)
+TARGET_RECOVERY_DEVICE_MODULES += \
+		ssw49501.ko \
+		ssw_mon.ko
+endif
+
+#XZ3 ATMEL
+ifneq ($(filter omni_akatsuki, $(TARGET_PRODUCT)),)
+TARGET_RECOVERY_DEVICE_MODULES += \
+		atmel_mxt640u.ko
+endif
+endif
