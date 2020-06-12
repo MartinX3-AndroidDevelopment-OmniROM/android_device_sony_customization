@@ -53,26 +53,6 @@ LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw
 include $(BUILD_PREBUILT)
 
-ifneq ($(TARGET_KEYMASTER_V4),true)
-include $(CLEAR_VARS)
-LOCAL_MODULE := android.hardware.keymaster@3.0-service
-LOCAL_SRC_FILES := vendor/bin/hw/$(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
-LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw
-include $(BUILD_PREBUILT)
-endif
-
-ifeq ($(TARGET_KEYMASTER_V4),true)
-include $(CLEAR_VARS)
-LOCAL_MODULE := android.hardware.keymaster@4.0-service-qti
-LOCAL_SRC_FILES := vendor/bin/hw/$(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
-LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw
-include $(BUILD_PREBUILT)
-endif
-
 # Needed by qseecomd
 include $(CLEAR_VARS)
 LOCAL_MODULE := libgptutils.so
@@ -190,28 +170,6 @@ LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
 include $(BUILD_PREBUILT)
 
-# Needed by android.hardware.keymaster@4.0-service-qti
-ifeq ($(TARGET_KEYMASTER_V4),true)
-include $(CLEAR_VARS)
-LOCAL_MODULE := libqtikeymaster4.so
-LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
-LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
-include $(BUILD_PREBUILT)
-endif
-
-# Needed by android.hardware.keymaster@4.0-service-qti
-ifeq ($(TARGET_KEYMASTER_V4),true)
-include $(CLEAR_VARS)
-LOCAL_MODULE := libkeymasterutils.so
-LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
-LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
-include $(BUILD_PREBUILT)
-endif
-
 # Needed by qseecomd
 include $(CLEAR_VARS)
 LOCAL_MODULE := libion.so
@@ -230,20 +188,50 @@ LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
 include $(BUILD_PREBUILT)
 
-# Needed by android.hardware.gatekeeper@1.0-service
-# need to copy hw modules to /vendor/lib64/hw
-# hw_get_module() does not look for them under /sbin
-# Copy the 3.0 implementation only if the device declares support for it.
-# Keymaster device enumeration would otherwise load both 3.0 and 4.0, with 3.0 crashing due to incompatible libs.
-ifneq ($(TARGET_KEYMASTER_V4),true)
+# Needed by qseecomd
 include $(CLEAR_VARS)
-LOCAL_MODULE := android.hardware.keymaster@3.0-impl-qti.so
-LOCAL_SRC_FILES := vendor/lib64/hw/$(LOCAL_MODULE)
+LOCAL_MODULE := libsecureui.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
-LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
 include $(BUILD_PREBUILT)
-endif
+
+# Needed by qseecomd
+include $(CLEAR_VARS)
+LOCAL_MODULE := libqisl.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+include $(BUILD_PREBUILT)
+
+# Needed by qseecomd
+include $(CLEAR_VARS)
+LOCAL_MODULE := libspl.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+include $(BUILD_PREBUILT)
+
+# Needed by qseecomd
+include $(CLEAR_VARS)
+LOCAL_MODULE := libGPreqcancel.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+include $(BUILD_PREBUILT)
+
+# Needed by qseecomd
+include $(CLEAR_VARS)
+LOCAL_MODULE := libops.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+include $(BUILD_PREBUILT)
 
 # Needed by android.hardware.gatekeeper@1.0-service
 # need to copy hw modules to /vendor/lib64/hw
@@ -256,3 +244,54 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw
 include $(BUILD_PREBUILT)
+
+ifneq ($(TARGET_KEYMASTER_V4),true)
+include $(CLEAR_VARS)
+LOCAL_MODULE := android.hardware.keymaster@3.0-service
+LOCAL_SRC_FILES := vendor/bin/hw/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw
+include $(BUILD_PREBUILT)
+
+# Needed by android.hardware.gatekeeper@1.0-service
+# need to copy hw modules to /vendor/lib64/hw
+# hw_get_module() does not look for them under /sbin
+# Copy the 3.0 implementation only if the device declares support for it.
+# Keymaster device enumeration would otherwise load both 3.0 and 4.0, with 3.0 crashing due to incompatible libs.
+include $(CLEAR_VARS)
+LOCAL_MODULE := android.hardware.keymaster@3.0-impl-qti.so
+LOCAL_SRC_FILES := vendor/lib64/hw/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/hw
+include $(BUILD_PREBUILT)
+endif
+
+ifeq ($(TARGET_KEYMASTER_V4),true)
+include $(CLEAR_VARS)
+LOCAL_MODULE := android.hardware.keymaster@4.0-service-qti
+LOCAL_SRC_FILES := vendor/bin/hw/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/hw
+include $(BUILD_PREBUILT)
+
+# Needed by android.hardware.keymaster@4.0-service-qti
+include $(CLEAR_VARS)
+LOCAL_MODULE := libqtikeymaster4.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+include $(BUILD_PREBUILT)
+
+# Needed by android.hardware.keymaster@4.0-service-qti
+include $(CLEAR_VARS)
+LOCAL_MODULE := libkeymasterutils.so
+LOCAL_SRC_FILES := vendor/lib64/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+include $(BUILD_PREBUILT)
+endif

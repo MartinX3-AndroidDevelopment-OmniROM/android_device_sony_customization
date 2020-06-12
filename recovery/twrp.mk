@@ -51,21 +51,20 @@ TW_CRYPTO_KEY_LOC := "footer"
 # without modifying the "rootdir/init.recovery.common.rc" in "device-sony-common" repo
 # with "import /init.recovery.twrp.rc" at its beginning
 TW_CRYPTO_USE_SYSTEM_VOLD :=
-# This will override the values from the buildimage with the correct ones from system/build.prop (SAR/Treble)
-# Needed for the userdata decryption ny the keymaster.
-TW_OVERRIDE_SYSTEM_PROPS := "ro.build.version.release;ro.build.version.security_patch"
-# Additional ovverides needed to make the decryption working in TWRP
-# These values need to match the security patch level of the rom.
-# If they repesent the past /earlier android or the future/newer android,
-# then the keymaster won't decrypt the userdata.
-# Since these values are part of the bootimage header and directly consumed by the bootloader,
-# They can't get changed dynamically for an always working TWRP.
-# So the TWRP needs a new release each month or AvB 2.0 will refuse the TWRP to boot.
-# A workaround would be a disabled decryption.
-PLATFORM_VERSION := 10.0.0
-ifneq ($(PLATFORM_SECURITY_PATCH_OVERRIDE), )
-	PLATFORM_SECURITY_PATCH_OVERRIDE := $(PLATFORM_SECURITY_PATCH_OVERRIDE)
-endif
+# This will override the values from the buildimage with the correct ones from system/build.prop (SAR/Treble).
+# It is needed for the userdata decryption by the keymaster in a persistent installed TWRP.
+# ro.vendor.build.version.release is needed for keymaster 4.0
+# ro.vendor.build.security_patch is needed for keymaster 4.0
+TW_OVERRIDE_SYSTEM_PROPS := "ro.build.version.release;ro.build.version.security_patch;ro.vendor.build.version.release=ro.build.version.release;ro.vendor.build.security_patch=ro.build.version.security_patch"
+# These overrides are needed to make the decryption working in TWRP.
+# They are part of the bootimage header and directly consumed by the bootloader.
+# After that they're used by the keymaster.
+PLATFORM_VERSION := 10
+PLATFORM_SECURITY_PATCH_OVERRIDE := 2020-05-01
+# Needed for keymaster 4.0
+PRODUCT_PROPERTY_OVERRIDES += \
+		ro.vendor.build.version.release=10 \
+    ro.vendor.build.security_patch=2020-05-01
 
 # init
 TARGET_RECOVERY_DEVICE_MODULES += \
@@ -91,6 +90,11 @@ TARGET_RECOVERY_DEVICE_MODULES += \
 		libspcom.so \
 		libion.so \
 		libxml2.so \
+		libsecureui.so \
+		libqisl.so \
+		libspl.so \
+		libGPreqcancel.so \
+		libops.so \
 		bootctrl.sdm845.so
 TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
 		$(TARGET_RECOVERY_ROOT_OUT)/vendor/bin/qseecomd \
