@@ -2,6 +2,11 @@
 # This is for TWRP Recovery
 #
 
+# The device subversion of TWRP
+# Example:
+# TWRP 3.4.0 + TW_DEVICE_VERSION := 99 = 3.4.0-99
+TW_DEVICE_VERSION := 0
+
 # user interface
 TW_THEME := portrait_hdpi
 TW_MAX_BRIGHTNESS := 255
