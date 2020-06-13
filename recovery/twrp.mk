@@ -26,10 +26,7 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_USE_TOOLBOX := true
 TW_EXCLUDE_SUPERSU := true
 TW_EXTRA_LANGUAGES := true
-# TODO Reenable with TWRP 10.0
-# A 9.0 RAMDISK won't work in a 10.0 ROM.
-# The result is an unbootable system and a always into recovery booting phone.
-#TW_INCLUDE_REPACKTOOLS := true
+TW_INCLUDE_REPACKTOOLS := true
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
 
