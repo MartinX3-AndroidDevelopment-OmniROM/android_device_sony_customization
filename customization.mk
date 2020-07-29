@@ -1,9 +1,9 @@
-ifneq ($(filter lineage_akari lineage_apollo, $(TARGET_PRODUCT)),)
+ifneq ($(filter omni_akari omni_apollo, $(TARGET_PRODUCT)),)
 TARGET_SCREEN_HEIGHT := 2160
 TARGET_SCREEN_WIDTH := 1080
 endif
 
-ifneq ($(filter lineage_akatsuki, $(TARGET_PRODUCT)),)
+ifneq ($(filter omni_akatsuki, $(TARGET_PRODUCT)),)
 TARGET_SCREEN_HEIGHT := 2880
 TARGET_SCREEN_WIDTH := 1440
 endif
