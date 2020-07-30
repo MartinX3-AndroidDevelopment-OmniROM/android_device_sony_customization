@@ -72,11 +72,11 @@ TW_OVERRIDE_SYSTEM_PROPS := "ro.build.version.release;ro.build.version.security_
 # They are part of the bootimage header and directly consumed by the bootloader.
 # After that they're used by the keymaster.
 PLATFORM_VERSION := 10
-PLATFORM_SECURITY_PATCH_OVERRIDE := 2020-05-01
+PLATFORM_SECURITY_PATCH_OVERRIDE := 2099-12-31
 # Needed for keymaster 4.0
 PRODUCT_PROPERTY_OVERRIDES += \
 		ro.vendor.build.version.release=10 \
-    ro.vendor.build.security_patch=2020-05-01
+    ro.vendor.build.security_patch=2099-12-31
 
 # init
 TARGET_RECOVERY_DEVICE_MODULES += \
