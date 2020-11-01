@@ -1,4 +1,5 @@
 # Copyright (C) 2019 AngeloGioacchino Del Regno <kholk11@gmail.com>
+# Copyright (C) 2020 Martin Dünkelmann <nc-duenkekl3@netcologne.de>
 #
 # ROM specific customization for Sony Open Devices
 #
@@ -32,12 +33,12 @@ TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
 endif
 
-ifneq ($(filter aosp_h82%6 aosp_h83%4, $(TARGET_PRODUCT)),)
+ifneq ($(filter omni_akari omni_apollo, $(TARGET_PRODUCT)),)
 TARGET_SCREEN_HEIGHT := 2160
 TARGET_SCREEN_WIDTH := 1080
 endif
 
-ifneq ($(filter aosp_h84%6 aosp_h94%6, $(TARGET_PRODUCT)),)
+ifneq ($(filter omni_akatsuki, $(TARGET_PRODUCT)),)
 TARGET_SCREEN_HEIGHT := 2880
 TARGET_SCREEN_WIDTH := 1440
 endif
@@ -96,8 +97,8 @@ PRODUCT_PACKAGES += \
     qtiImsInCallUi \
     ConfURIDialer
 
-PRODUCT_BOOT_JARS += \
-    telephony-ext
+#PRODUCT_BOOT_JARS += \
+#    telephony-ext # Already added in OmniROM
 
 TARGET_FWK_DETECT_PATH := vendor/qcom/opensource/core-utils
 TARGET_PROVIDES_QTI_TELEPHONY_JAR := true
@@ -186,4 +187,6 @@ $(call inherit-product-if-exists, vendor/widevine/widevine.mk)
 DEXPREOPT_GENERATE_APEX_IMAGE := true
 
 -include $(CUST_PATH)/pe_cust.mk
--include vendor/aosp/config/common_full_phone.mk
+
+$(call inherit-product, vendor/omni/config/common.mk)
+include $(CUST_PATH)/recovery/twrp.mk

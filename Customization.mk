@@ -37,3 +37,6 @@ BOARD_KERNEL_SEPARATED_DTBO := false
 else
 BOARD_KERNEL_SEPARATED_DTBO := true
 endif
+
+# TWRP
+include $(CUST_PATH)/recovery/Twrp.mk
