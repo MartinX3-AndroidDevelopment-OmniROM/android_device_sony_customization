@@ -1,0 +1,30 @@
+name: repo-sync
+on:
+  schedule:
+  - cron:  "*/15 * * * *"
+jobs:
+  repo-sync:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Define variables
+      run: |
+        echo "upstream=PixelExperience-Devices/device_sony_customization" >> $GITHUB_ENV
+        echo "rebase_base=ten" >> $GITHUB_ENV
+        echo "rebase_head=MartinX3/twrp-10" >> $GITHUB_ENV
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        ref: ${{ env.rebase_head }}
+    - name: Define git author for rebase
+      run: |
+        git config user.email "nc-duenkekl3@netcologne.de"
+        git config user.name "Martin Dünkelmann"
+    - uses: repo-sync/github-sync@v2
+      with:
+        source_repo: ${{ env.upstream }}
+        source_branch: "*"
+        destination_branch: "*"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - run: git rebase origin/${{ env.rebase_base }} ${{ env.rebase_head }}
+    - run: git push --force-with-lease
+
