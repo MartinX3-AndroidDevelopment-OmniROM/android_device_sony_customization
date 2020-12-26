@@ -1,21 +1,11 @@
 #
-# This is for TWRP Recovery inherited from the lowercase customization.mk
+# This is for TWRP Recovery
 #
 
 # The device subversion of TWRP
 # Example:
 # TWRP 3.4.0 + TW_DEVICE_VERSION := 99 = 3.4.0-99
 TW_DEVICE_VERSION := 0
-
-# Bundle the recovery image with the DTBO partition.
-# See https://source.android.com/devices/bootloader/recovery-image
-# Makes it possible to always boot the TWRP regardless of the installed DTBO partition.
-BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-BOARD_INCLUDE_RECOVERY_DTBO := true
-# TODO: The Omni 9.0 base dtbo image generation is broken, so prefer a prebuilt file
-BOARD_PREBUILT_DTBOIMAGE := device/sony/prebuilt-sodp-kernel-4.14/dtbo-$(subst omni_,,$(TARGET_PRODUCT)).img
-#BOARD_PREBUILT_DTBOIMAGE := $(PRODUCT_OUT)/dtbo.img # INSTALLED_DTBOIMAGE_TARGET is empty at this time
-BOARD_INCLUDE_RECOVERY_ACPIO := true
 
 # user interface
 TW_THEME := portrait_hdpi
